@@ -1,0 +1,8 @@
+#srvファイルの定義：
+#入力は進行速度ト入室後の数値
+
+#型 フィールド名
+float32 linear_vel
+float32 target_dist
+---
+bool result

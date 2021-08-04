@@ -33,19 +33,21 @@ class DoorServer():
                 vel.linear.x = req.linear_vel
                 target_dist = req.target_dist
 
-                print 'execute true'
+                print self.front_dist
                 safe_dist = 1.0
-                rospy.liginfo('start "open_door"')
+                rospy.loginfo('start "open_door"')
                 time = (req.target_dist + safe_dist) / req.linear_vel
                 start_time = rospy.get_time()
-                while not rospy.is_shutdown() and self.front_dist >= safe_dist:
-                    if (rospy.get_time() - start_time):
-                        self.pub.publish(vel)
-                    else:
+                while not rospy.is_shutdown():
+                    if (rospy.get_time() - start_time) <= time and self.front_dist >= safe_dist:
+                         self.pub.publish(vel)
+                    elif not self.front_dist >= safe_dist and (rospy.get_time() - start_time) <= time:
                         rospy.loginfo('Please open the door')
-                return door_open_ver2Response(result = True)
-        except rospy.ROSInterruptExcption:
-            rospy.loginfo("!!Interrupted!!")
+                    else:
+                        pass
+            return door_open_ver2Response(result = True)
+        except:
+            rospy.loginfo('!!Interrupted!!')
             return door_open_ver2Response(result = False)
 
 if __name__ == '__main__':
